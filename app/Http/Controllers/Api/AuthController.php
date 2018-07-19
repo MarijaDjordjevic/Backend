@@ -6,7 +6,6 @@ use App\Http\Requests\UserLoginRequest;
 use App\Http\Requests\UserRegisterRequest;
 use App\Http\Resources\UserResource;
 use App\Http\Controllers\Controller;
-use App\Model\User;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 /**
@@ -21,11 +20,7 @@ class AuthController extends Controller
      */
     public function register(UserRegisterRequest $request)
     {
-        $user = User::create([
-            'name'     => $request->get('name'),
-            'email'    => $request->get('email'),
-            'password' => bcrypt($request->get('password')),
-        ]);
+        $user = $this->authService()->saveUser($request);
         $token = JWTAuth::fromUser($user);
 
         return (new UserResource($user))->additional(['access_token' => $token]);
@@ -37,10 +32,9 @@ class AuthController extends Controller
      */
     public function login(UserLoginRequest $request)
     {
-        $credentials = $request->only('email', 'password');
+
         try {
-            $token = JWTAuth::attempt($credentials);
-            JWTAuth::setToken($token);
+            $token = $this->authService()->setToken($request);
             $user = JWTAuth::authenticate();
 
             return (new UserResource($user))->additional(['access_token' => $token]);
@@ -55,7 +49,7 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        JWTAuth::invalidate(JWTAuth::getToken());
+        $this->authService()->invalidateToken();
         return response()->json(['success' => 'Logged out successfully'], 200);
     }
 }
