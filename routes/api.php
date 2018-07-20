@@ -13,9 +13,9 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+//Route::middleware('auth:api')->get('/user', function (Request $request) {
+//    return $request->user();
+//});
 
 Route::middleware('jwt.auth')->get('users', function (Request $request) {
     return auth()->user();
@@ -23,7 +23,8 @@ Route::middleware('jwt.auth')->get('users', function (Request $request) {
 
 Route::post('users/register', 'Api\AuthController@register');
 Route::post('users/login', 'Api\AuthController@login');
-
+Route::get('/users', 'Api\UserController@getAllUsers');
 Route::middleware(['jwt.auth'])->group(function () {
     Route::post('/users/logout', 'Api\AuthController@logout');
+    Route::get('/users/{id}', 'Api\UserController@getUserById');
 });
