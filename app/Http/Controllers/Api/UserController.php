@@ -39,23 +39,4 @@ class UserController extends Controller
             return new JsonResponse(['error' => 'Resource not found'], 404);
         }
     }
-
-    /**
-     * @param UserRegisterRequest $request
-     * @return mixed
-     */
-    public function saveUser(UserRegisterRequest $request)
-    {
-        try {
-            $user = User::create([
-                'name'     => $request->name,
-                'email'    => $request->email,
-                'password' => bcrypt($request->password)
-            ]);
-
-            return $user;
-        } catch (\Exception $exception) {
-            return new JsonResponse(['error' => 'Failed to create a resource'], 417);
-        }
-    }
 }
