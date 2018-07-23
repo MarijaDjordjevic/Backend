@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Resources\GameResource;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\MoveResource;
 use App\Model\Game;
+use App\Model\Move;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
@@ -46,19 +48,21 @@ class GameController extends Controller
 
     public function table($game_id)
     {
-        $playerX = Game::where('id', $game_id)->first()->player_x;
-        $playerO = Game::where('id', $game_id)->first()->player_o;
-        $x = DB::table('moves')
-            ->where('game_id', $game_id)
-            ->where('player_id', $playerX)
-            ->select('position')
-            ->get();
-        $o = DB::table('moves')
-            ->where('game_id', $game_id)
-            ->where('player_id', $playerO)
-            ->select('position')
-            ->get();
-
-        return response()->json(['x' => $x, 'o' => $o]);
+//        $playerX = Game::where('id', $game_id)->first()->player_x;
+//        $playerO = Game::where('id', $game_id)->first()->player_o;
+//        $x = DB::table('moves')
+//            ->where('game_id', $game_id)
+//            ->where('player_id', $playerX)
+//            ->select('position')
+//            ->get();
+//        $o = DB::table('moves')
+//            ->where('game_id', $game_id)
+//            ->where('player_id', $playerO)
+//            ->select('position')
+//            ->get();
+//
+//        return response()->json(['x' => $x, 'o' => $o]);
+        $moves = Move::where('game_id', $game_id)->get();
+        return MoveResource::collection($moves);
     }
 }

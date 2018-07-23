@@ -18,6 +18,7 @@ class CreateMovesTable extends Migration
             $table->integer('game_id');
             $table->integer('player_id');
             $table->integer('position');
+            $table->string('field_type', 1);
             $table->timestamps();
         });
     }
