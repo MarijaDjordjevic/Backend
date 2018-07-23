@@ -21,15 +21,14 @@ use Illuminate\Http\Request;
 //    return auth()->user();
 //});
 
-Route::middleware(['cors'])->group(function () {
-    Route::post('users/register', 'Api\AuthController@register');
-    Route::post('users/login', 'Api\AuthController@login');
-    Route::get('/users', 'Api\UserController@getAllUsers');
-    Route::middleware(['jwt.auth'])->group(function () {
-        Route::post('/users/logout', 'Api\AuthController@logout');
-        Route::get('/users/{id}', 'Api\UserController@getUserById');
-        Route::post('/games/{user_id}', 'Api\GameController@createGame');
-        Route::post('/games/{game_id}/{position}', 'Api\MoveController@createMove');
-        Route::get('/games/{game_id}/table', 'Api\GameController@table');
-    });
+
+Route::post('users/register', 'Api\AuthController@register');
+Route::post('users/login', 'Api\AuthController@login');
+Route::get('users', 'Api\UserController@getAllUsers');
+Route::middleware(['jwt.auth'])->group(function () {
+    Route::post('users/logout', 'Api\AuthController@logout');
+    Route::get('users/{id}', 'Api\UserController@getUserById');
+    Route::post('games/{user_id}', 'Api\GameController@createGame');
+    Route::post('games/{game_id}/{position}', 'Api\MoveController@createMove');
+    Route::get('games/{game_id}/table', 'Api\GameController@table');
 });

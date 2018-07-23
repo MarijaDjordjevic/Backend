@@ -13,7 +13,7 @@ class Move extends Model
     /**
      * @var array
      */
-    public $combinations = [
+    public static $combinations = [
         [1, 2, 3],
         [4, 5, 6],
         [7, 8, 9],
@@ -28,9 +28,9 @@ class Move extends Model
      * @param array $positions
      * @return bool
      */
-    public function checkCombination($positions)
+    public static function checkCombination($positions)
     {
-        foreach ($this->combinations as $combination) {
+        foreach (self::$combinations as $combination) {
             $result = array_intersect($positions, $combination);
             if (count($result) == 3) {
                 return true;
