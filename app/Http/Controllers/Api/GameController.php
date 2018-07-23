@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Resources\GameResource;
 use App\Http\Controllers\Controller;
+use App\Model\Game;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
@@ -28,12 +29,36 @@ class GameController extends Controller
         }
     }
 
-    public function createMove()
+    public function createMove($game_id, $position)
     {
         DB::table('moves')->insert([
             'game_id'   => $game_id,
             'player_id' => auth()->user()->id,
             'position'  => $position
         ]);
+        $data = [
+            'game_id'   => $game_id,
+            'player_id' => auth()->user()->id,
+            'position'  => $position
+        ];
+        return response()->json($data);
+    }
+
+    public function table($game_id)
+    {
+        $playerX = Game::where('id', $game_id)->first()->player_x;
+        $playerO = Game::where('id', $game_id)->first()->player_o;
+        $x = DB::table('moves')
+            ->where('game_id', $game_id)
+            ->where('player_id', $playerX)
+            ->select('position')
+            ->get();
+        $o = DB::table('moves')
+            ->where('game_id', $game_id)
+            ->where('player_id', $playerO)
+            ->select('position')
+            ->get();
+
+        return response()->json(['x' => $x, 'o' => $o]);
     }
 }
