@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Resources\MoveResource;
 use App\Http\Controllers\Controller;
+use App\Model\Move;
 use App\Model\User;
-use App\Services\MoveService;
 
 /**
  * Class MoveController
@@ -20,16 +20,30 @@ class MoveController extends Controller
      */
     public function createMove($game_id, $position)
     {
-        $move = $this->moveService()->createMove($game_id, $position);
+        if ($response = $this->gameService()->gameOver($game_id)) {
+            return $response;
+        }
 
-        if (MoveService::checkWinner($game_id)) {
+        if (in_array($position, $this->moveService()->getAllPositions($game_id))) {
+            return response()->json([
+                'message' => 'This field has already been taken',
+            ], 200);
+        }
+
+        if (Move::where('game_id', $game_id)->latest()->value('player_id') == auth()->user()->id) {
+            return response()->json([
+                'message' => 'It\'s not your turn, you have already made a move',
+            ], 200);
+        }
+
+        $move = $this->moveService()->createMove($game_id, $position);
+        if ($this->moveService()->checkWinner($game_id)) {
             return response()->json([
                 'message' => 'Game Over',
                 'winner'  => User::find(auth()->user()->id)->name
             ], 200);
         }
-
-        if (MoveService::checkDraw($game_id)) {
+        if ($this->moveService()->checkDraw($game_id)) {
             return response()->json([
                 'message' => 'Draw',
             ], 200);

@@ -9,6 +9,7 @@
 namespace App\Services;
 
 use App\Model\Game;
+use App\Model\User;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -29,5 +30,28 @@ class GameService
         $game->save();
 
         return $game;
+    }
+
+    /**
+     * @param int $game_id
+     * @return bool|JsonResponse
+     */
+    public function gameOver($game_id)
+    {
+        $game = Game::find($game_id);
+        if (isset($game->winner)) {
+            return response()->json([
+                'message' => 'Game Over',
+                'winner'  => User::find($game->winner)->name
+            ], 200);
+        }
+
+        if ($game->draw) {
+            return response()->json([
+                'message' => 'Draw',
+            ], 200);
+        }
+
+        return false;
     }
 }

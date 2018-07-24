@@ -32,20 +32,14 @@ class GameController extends Controller
         }
     }
 
+    /**
+     * @param int $game_id
+     * @return bool|JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function table($game_id)
     {
-        $game = Game::find($game_id);
-        if (isset($game->winner)) {
-            return response()->json([
-                'message' => 'Game Over',
-                'winner'  => User::find($game->winner)->name
-            ], 200);
-        }
-
-        if ($game->draw) {
-            return response()->json([
-                'message' => 'Draw',
-            ], 200);
+        if ($response = $this->gameService()->gameOver($game_id)) {
+            return $response;
         }
         $moves = Move::where('game_id', $game_id)->get();
 

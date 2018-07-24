@@ -12,8 +12,17 @@ namespace App\Services;
 use App\Model\Game;
 use App\Model\Move;
 
+/**
+ * Class MoveService
+ * @package App\Services
+ */
 class MoveService
 {
+    /**
+     * @param int $game_id
+     * @param int $position
+     * @return Move
+     */
     public function createMove($game_id, $position)
     {
         $move = new Move();
@@ -26,7 +35,11 @@ class MoveService
         return $move;
     }
 
-    public static function getPlayerPositions($game_id)
+    /**
+     * @param int $game_id
+     * @return mixed
+     */
+    public function getPlayerPositions($game_id)
     {
         $positions = Move::where('game_id', $game_id)
             ->where('player_id', auth()->user()->id)
@@ -34,14 +47,31 @@ class MoveService
         return $positions;
     }
 
-    public static function getAllPositions($game_id)
+    /**
+     * @param int $game_id
+     * @return mixed
+     */
+    public function getNumOfAllPositions($game_id)
     {
         return Move::where('game_id', $game_id)->count();
     }
 
-    public static function checkWinner($game_id)
+    /**
+     * @param int $game_id
+     * @return mixed
+     */
+    public function getAllPositions($game_id)
     {
-        $player_positions = self::getPlayerPositions($game_id);
+        return Move::where('game_id', $game_id)->pluck('position')->toArray();
+    }
+
+    /**
+     * @param int $game_id
+     * @return bool
+     */
+    public function checkWinner($game_id)
+    {
+        $player_positions = $this->getPlayerPositions($game_id);
         if (!Move::checkCombination($player_positions)) {
             return false;
         }
@@ -52,9 +82,13 @@ class MoveService
         return true;
     }
 
-    public static function checkDraw($game_id)
+    /**
+     * @param int $game_id
+     * @return bool
+     */
+    public function checkDraw($game_id)
     {
-        $all_positions = self::getAllPositions($game_id);
+        $all_positions = $this->getNumOfAllPositions($game_id);
         if ($all_positions != 9) {
             return false;
         }
@@ -65,6 +99,10 @@ class MoveService
         return true;
     }
 
+    /**
+     * @param int $game_id
+     * @return string
+     */
     public function getFieldType($game_id)
     {
         $playerX = Game::where('id', $game_id)->first()->player_x;
