@@ -17,9 +17,9 @@ class UserController extends Controller
     /**
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function getAllUsers()
+    public function getAppliedUsers()
     {
-        $users = User::all();
+        $users = User::where('applied', 1)->where('id', '!=', auth()->user()->id)->get();
 
         return UserResource::collection($users);
     }

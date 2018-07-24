@@ -24,9 +24,9 @@ use Illuminate\Http\Request;
 
 Route::post('users/register', 'Api\AuthController@register');
 Route::post('users/login', 'Api\AuthController@login');
-Route::get('users', 'Api\UserController@getAllUsers');
 Route::middleware(['jwt.auth'])->group(function () {
     Route::post('users/logout', 'Api\AuthController@logout');
+    Route::get('users', 'Api\UserController@getAppliedUsers');
     Route::get('users/{id}', 'Api\UserController@getUserById');
     Route::post('games/{user_id}', 'Api\GameController@createGame');
     Route::post('games/{game_id}/{position}', 'Api\MoveController@createMove');
