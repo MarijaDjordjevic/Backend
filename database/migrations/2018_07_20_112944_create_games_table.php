@@ -19,6 +19,7 @@ class CreateGamesTable extends Migration
             $table->unsignedInteger('player_o');
             $table->integer('winner')->nullable();
             $table->boolean('draw')->default(false);
+            $table->boolean('active')->default(false);
             $table->timestamps();
 
             $table->foreign('player_x')->references('id')->on('users')->onDelete('cascade');

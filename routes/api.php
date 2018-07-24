@@ -30,5 +30,7 @@ Route::middleware(['jwt.auth'])->group(function () {
     Route::get('users/{id}', 'Api\UserController@getUserById');
     Route::post('games/{user_id}', 'Api\GameController@createGame');
     Route::post('games/{game_id}/{position}', 'Api\MoveController@createMove');
-    Route::get('games/{game_id}/table', 'Api\GameController@table');
+    Route::get('games/{game_id}/table', 'Api\GameController@getTable');
+    Route::put('games/apply', 'Api\GameController@applyToGame');
+    Route::get('games/status', 'Api\GameController@checkGameStatus');
 });

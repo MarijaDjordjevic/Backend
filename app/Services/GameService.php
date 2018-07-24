@@ -27,6 +27,7 @@ class GameService
         $game = new Game();
         $game->player_x = auth()->user()->id;
         $game->player_o = $user_id;
+        $game->active = true;
         $game->save();
 
         return $game;
