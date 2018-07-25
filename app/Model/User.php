@@ -29,4 +29,22 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function challengers()
+    {
+        return $this->belongsToMany('App\Model\User', 'challenge_user', 'challenged_id', 'challenger_id')
+            ->withPivot('accepted');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function challenged()
+    {
+        return $this->belongsToMany('App\Model\User', 'challenge_user', 'challenger_id', 'challenged_id')
+            ->withPivot('accepted');
+    }
 }
