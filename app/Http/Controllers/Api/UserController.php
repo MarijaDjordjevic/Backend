@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\UserRegisterRequest;
+use App\Http\Resources\GameResource;
 use App\Http\Resources\UserResource;
 use App\Model\User;
 use App\Http\Controllers\Controller;
@@ -38,5 +39,41 @@ class UserController extends Controller
         } catch (\Exception $exception) {
             return new JsonResponse(['error' => 'Resource not found'], 404);
         }
+    }
+
+    public function setChallenge($challenged_id)
+    {
+        $user = User::find(auth()->user()->id);
+        $user->challenged()->attach($challenged_id);
+
+        return $user->challenged()->where('challenged_id', $challenged_id)->first();
+    }
+
+    public function getChallengers()
+    {
+        $user = User::find(auth()->user()->id);
+        return $user->challengers()->where('accepted', false)->get();
+    }
+
+    public function acceptChallenge($challenger_id)
+    {
+        $user = User::find(auth()->user()->id);
+        $user->challengers()->updateExistingPivot($challenger_id, ['accepted' => true]);
+
+        try {
+            $game = $this->gameService()->createGame($challenger_id);
+
+            return new GameResource($game);
+        } catch (\Exception $exception) {
+            return new JsonResponse(['error' => 'Failed to create  resource'], 417);
+        }
+    }
+
+    public function rejectChallenge($challenger_id)
+    {
+        $user = User::find(auth()->user()->id);
+        $user->challengers()->detach($challenger_id);
+
+        return 'rejected';
     }
 }
