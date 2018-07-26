@@ -17,3 +17,6 @@ Broadcast::channel('App.User.{id}', function ($user, $id) {
 Broadcast::channel('lobby', function ($user) {
     return ['id' => $user->id, 'name' => $user->name];
 });
+Broadcast::channel('user.{id}', function ($user) {
+    return true;
+});

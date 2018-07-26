@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\ChallengeEvent;
 use App\Http\Requests\UserRegisterRequest;
 use App\Http\Resources\GameResource;
 use App\Http\Resources\UserResource;
@@ -43,9 +44,9 @@ class UserController extends Controller
 
     public function setChallenge($challenged_id)
     {
-        $user = User::find(auth()->user()->id);
+        $user = auth()->user();
         $user->challenged()->attach($challenged_id);
-
+        broadcast(new ChallengeEvent($user, $challenged_id));
         return $user->challenged()->where('challenged_id', $challenged_id)->first();
     }
 
