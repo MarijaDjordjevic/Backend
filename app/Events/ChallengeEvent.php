@@ -15,10 +15,12 @@ class ChallengeEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $challenger, $id;
+
     /**
-     * Create a new event instance.
-     *
-     * @return void
+     * ChallengeEvent constructor.
+     * @param User $challenger
+     * @param int $id
      */
     public function __construct(User $challenger, $id)
     {
@@ -36,6 +38,9 @@ class ChallengeEvent implements ShouldBroadcast
         return new PrivateChannel('user' . $this->id);
     }
 
+    /**
+     * @return array
+     */
     public function broadcastWith()
     {
         return [
