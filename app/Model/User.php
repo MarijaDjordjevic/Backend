@@ -36,7 +36,7 @@ class User extends Authenticatable
     public function challengers()
     {
         return $this->belongsToMany('App\Model\User', 'challenge_user', 'challenged_id', 'challenger_id')
-            ->withPivot('accepted');
+            ->withPivot('accepted', 'id');
     }
 
     /**
@@ -45,6 +45,6 @@ class User extends Authenticatable
     public function challenged()
     {
         return $this->belongsToMany('App\Model\User', 'challenge_user', 'challenger_id', 'challenged_id')
-            ->withPivot('accepted');
+            ->withPivot('accepted', 'id');
     }
 }

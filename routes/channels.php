@@ -17,6 +17,14 @@ Broadcast::channel('App.User.{id}', function ($user, $id) {
 Broadcast::channel('lobby', function ($user) {
     return ['id' => $user->id, 'name' => $user->name];
 });
-Broadcast::channel('user.{id}', function ($user) {
+Broadcast::channel('user.{id}', function ($user, $id) {
+    //return $user->id === User::find($id)->challenged()->where('challenged_id', $id)->first()->pivot->challenged_id;
+    return true;
+});
+Broadcast::channel('challenge.{id}', function ($user, $id) {
+    //return $user->id === User::find($id)->challenged()->where('challenged_id', $id)->first()->pivot->challenged_id;
+    return true;
+});Broadcast::channel('game.{id}', function ($user, $id) {
+    //return $user->id === User::find($id)->challenged()->where('challenged_id', $id)->first()->pivot->challenged_id;
     return true;
 });
