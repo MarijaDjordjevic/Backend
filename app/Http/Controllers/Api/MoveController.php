@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\GameOverEvent;
+use App\Events\MoveEvent;
 use App\Http\Resources\MoveResource;
 use App\Http\Controllers\Controller;
 use App\Model\Move;
@@ -37,16 +39,21 @@ class MoveController extends Controller
         }
 
         $move = $this->moveService()->createMove($game_id, $position);
-        if ($this->moveService()->checkWinner($game_id)) {
-            return response()->json([
-                'message' => 'Game Over',
-                'winner'  => User::find(auth()->user()->id)->name
-            ], 200);
+        broadcast(new MoveEvent($move));
+        $game_winner = $this->moveService()->checkWinner($game_id);
+        $game_draw = $this->moveService()->checkDraw($game_id);
+        if ($game_winner) {
+//            return response()->json([
+//                'message' => 'Game Over',
+//                'winner'  => User::find(auth()->user()->id)->name
+//            ], 200);
+            broadcast(new GameOverEvent($game_winner));
         }
-        if ($this->moveService()->checkDraw($game_id)) {
-            return response()->json([
-                'message' => 'Draw',
-            ], 200);
+        if ($game_draw) {
+//            return response()->json([
+//                'message' => 'Draw',
+//            ], 200);
+            broadcast(new GameOverEvent($game_draw));
         }
 
         return new MoveResource($move);

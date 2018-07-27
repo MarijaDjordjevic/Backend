@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Model\Move;
+use App\Model\Game;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -11,24 +11,20 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-/**
- * Class MoveEvent
- * @package App\Events
- */
-class MoveEvent implements ShouldBroadcast
+class GameOverEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $move;
+    public $game;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(Move $move)
+    public function __construct(Game $game)
     {
-        $this->move = $move;
+        $this->game = $game;
     }
 
     /**
@@ -38,6 +34,6 @@ class MoveEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('game.' . $this->move->game_id);
+        return new PrivateChannel('game.' . $this->game->id);
     }
 }

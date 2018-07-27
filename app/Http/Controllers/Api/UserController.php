@@ -95,6 +95,6 @@ class UserController extends Controller
         $user = User::find(auth()->user()->id);
         $user->challengers()->detach($challenger_id);
 
-        return 'rejected';
+        return response()->json(['rejected' => true]);
     }
 }

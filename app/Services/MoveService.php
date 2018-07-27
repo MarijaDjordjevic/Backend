@@ -9,6 +9,7 @@
 namespace App\Services;
 
 
+use App\Events\GameOverEvent;
 use App\Model\Game;
 use App\Model\Move;
 
@@ -78,8 +79,8 @@ class MoveService
         $game = Game::find($game_id);
         $game->winner = auth()->user()->id;
         $game->save();
-
-        return true;
+        //broadcast(new GameOverEvent($game));
+        return $game;
     }
 
     /**
@@ -95,8 +96,8 @@ class MoveService
         $game = Game::find($game_id);
         $game->draw = true;
         $game->save();
-
-        return true;
+        //broadcast(new GameOverEvent($game));
+        return $game;
     }
 
     /**
