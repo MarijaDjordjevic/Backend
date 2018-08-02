@@ -52,7 +52,7 @@ class GameController extends Controller
      */
     public function applyToGame()
     {
-        $user = User::find(auth()->user()->id);
+        $user = auth()->user();
         $user->applied = true;
         $user->save();
 

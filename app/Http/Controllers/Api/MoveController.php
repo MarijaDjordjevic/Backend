@@ -43,16 +43,9 @@ class MoveController extends Controller
         $game_winner = $this->moveService()->checkWinner($game_id);
         $game_draw = $this->moveService()->checkDraw($game_id);
         if ($game_winner) {
-//            return response()->json([
-//                'message' => 'Game Over',
-//                'winner'  => User::find(auth()->user()->id)->name
-//            ], 200);
             broadcast(new GameOverEvent($game_winner));
         }
         if ($game_draw) {
-//            return response()->json([
-//                'message' => 'Draw',
-//            ], 200);
             broadcast(new GameOverEvent($game_draw));
         }
 

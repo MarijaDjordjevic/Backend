@@ -62,7 +62,7 @@ class UserController extends Controller
      */
     public function getChallengers()
     {
-        $user = User::find(auth()->user()->id);
+        $user = auth()->user();
         return $user->challengers()->where('accepted', false)->get();
     }
 
@@ -72,7 +72,7 @@ class UserController extends Controller
      */
     public function acceptChallenge($challenger_id)
     {
-        $user = User::find(auth()->user()->id);
+        $user = auth()->user();
         $user->challengers()->updateExistingPivot($challenger_id, ['accepted' => true]);
 
         try {
@@ -92,7 +92,7 @@ class UserController extends Controller
      */
     public function rejectChallenge($challenger_id)
     {
-        $user = User::find(auth()->user()->id);
+        $user = auth()->user();
         $user->challengers()->detach($challenger_id);
 
         return response()->json(['rejected' => true]);
